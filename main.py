@@ -30,7 +30,7 @@ app = FastAPI()
 
 
 @app.get("/")
-async def root():
+def root():
     return {"message": "This is the root of the Text to Image Generation API"}
 
 
@@ -59,16 +59,6 @@ def generate_images(request: SentenceRequest):
 
         # Initialize the image generator
         image_generator = ImageGenerator()
-
-        # Generate images
-        # counter = 1
-        # new_directory = f"{BASE_DIRECTORY}_{counter}"
-        # while os.path.exists(new_directory):
-        #     counter += 1
-        #     new_directory = f"{BASE_DIRECTORY}_{counter}"
-        # os.makedirs(new_directory)
-        # print(f"Directory '{BASE_DIRECTORY}' already exists. Created '{new_directory}' instead.")
-
         images_data = []
         with tqdm(total=len(descriptions)) as pbar:
             for idx, description in enumerate(descriptions):
@@ -90,8 +80,6 @@ def generate_images(request: SentenceRequest):
 
             # return all the images
             if images_data:
-                # return Response(content=images_data, media_type="image/png")
-                # location, weather_event, img_byte_arr = images_data[0]
 
                 # Create a zip file containing all the images
                 zip_file = BytesIO()
