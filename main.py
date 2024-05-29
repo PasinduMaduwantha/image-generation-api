@@ -148,10 +148,12 @@ def generate_images(request: SentenceRequest):
 
                 # Create a zip file containing all the images
                 zip_file = BytesIO()
+                img_id_counter = 1
                 with zipfile.ZipFile(zip_file, mode='w') as z:
                     for location, weather_event, img_byte_arr in images_data:
-                        filename = f"{location}_{weather_event}_{idx+1}.png"
+                        filename = f"{location}_{weather_event}_{img_id_counter}.png"
                         z.writestr(filename, img_byte_arr)
+                        img_id_counter += 1
                 zip_file.seek(0)
                 return Response(content=zip_file.getvalue(), media_type="application/zip", headers={"Content-Disposition": "attachment; filename=generated_images.zip"})
 
