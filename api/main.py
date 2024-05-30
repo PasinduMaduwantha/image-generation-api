@@ -1,15 +1,15 @@
 import os
 import zipfile
 from io import BytesIO
-
+import uvicorn
 from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
 from typing import List
 
 from tqdm import tqdm
 
-from generate_description import WeatherDescriptionGenerator
-from image_generation_api import ImageGenerator
+from api.generate_description import WeatherDescriptionGenerator
+from api.image_generation_api import ImageGenerator
 
 
 class SentenceRequest(BaseModel):
@@ -102,9 +102,10 @@ def generate_images(request: SentenceRequest):
 
 BASE_DIRECTORY = "generated_images"
 
+HOST = "http://localhost"
+
 # Run the FastAPI application
 if __name__ == "__main__":
-    import uvicorn
 
-    uvicorn.run(app)
+    uvicorn.run(app, host=HOST, port=8000)
 
