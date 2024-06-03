@@ -24,7 +24,7 @@ class WeatherDescriptionGenerator:
 
         self.related_conditions = {
             ("foggy", "misty", "fog", "mist"): "misty",
-            ("rain", "rainy", "shower", "rains"): "rainy",
+            ("rain", "rainy", "shower", "rains", "showers"): "rainy",
             ("winds", "wind"): "windy",
             ("cloud" ):"cloudy",
             ("thundershower", "thunder", "thunderstorm", "thundershowers"): "thundershower",
