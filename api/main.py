@@ -63,12 +63,6 @@ def generate_images(request: SentenceRequest):
         with tqdm(total=len(descriptions)) as pbar:
             for idx, description in enumerate(descriptions):
                 image = image_generator.generate_images(description.description)
-                filename = f"{description.location}_{description.weather_event}_{idx + 1}"
-                # Save image with the formatted filename
-                try:
-                    image.save(f"generated_images_1/{filename}.png")  # Ensure the directory "images" exists
-                except Exception as e:
-                    raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
 
                 # Save the image to a BytesIO object
                 img_byte_arr = BytesIO()
@@ -86,7 +80,7 @@ def generate_images(request: SentenceRequest):
                 img_id_counter = 1
                 with zipfile.ZipFile(zip_file, mode='w') as z:
                     for location, weather_event, img_byte_arr in images_data:
-                        filename = f"{location}_{weather_event}_{img_id_counter}.png"
+                        filename = f"{img_id_counter}_{location}_{weather_event}.png"
                         z.writestr(filename, img_byte_arr)
                         img_id_counter += 1
                 zip_file.seek(0)
