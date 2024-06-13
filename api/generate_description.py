@@ -1,6 +1,10 @@
 import nltk.data
 from nltk import word_tokenize
-
+import nltk
+from nltk.corpus import wordnet
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
 
 class WeatherDescriptionGenerator:
     def __init__(self):
@@ -40,11 +44,12 @@ class WeatherDescriptionGenerator:
             "sabaragamuwa Province": "A province in central Sri Lanka, known for its lush greenery, waterfalls, and historical sites.",
             "central": "A mountainous region in central Sri Lanka, famous for its scenic landscapes and tea plantations.",
             "north-central": "ancient cities, and historical sites, dry zone.",
-            "northern": "known for its rich history and cultural heritage of tamil kovil, dry zone.",
+            "northern": "known for its rich history and cultural heritage of tamil kovil, palm trees, dry zone.",
             "north-western": "A province in northwestern Sri Lanka, known for its beaches, lagoons, and historical sites.",
             "southern": "A coastal province in southern Sri Lanka, known for its beaches, wildlife sanctuaries, and historical sites.",
             "uva": "A mountainous region in central Sri Lanka, famous for its scenic landscapes and tea plantations.",
             "polonnaruwa": "An ancient city in Sri Lanka, once a powerful kingdom with well-preserved ruins and historical sites.",
+            "jaffna": "known for its rich history and cultural heritage of tamil kovil, palm trees, dry zone.",
             "matale": "A city in central Sri Lanka, known for its spice gardens and scenic mountains.",
             "nuwara eliya": "A hill station in central Sri Lanka, popular for its cool climate, colonial architecture, and breathtaking views.",
             "galle": "A city on the southwestern coast of Sri Lanka, known for its beautiful Galle Dutch Fort, beaches.",
@@ -54,7 +59,7 @@ class WeatherDescriptionGenerator:
         }
 
         self.your_weather_descriptions = {
-            "rainy": "rain+++ falling, rain drops, wet environment, single figure walking with an umbrella.",
+            "rain": "rain+++ falling, rain drops, wet environment, single figure walking with an umbrella.",
             "shower": "rain+++ falling, rain drops, wet environment, single figure walking with an umbrella",
             "thundershower": "A thunderstorm with rain+++ falling, lightning, continuous thundering.",
             "windy": "strong winds++ blowing.",
@@ -67,11 +72,14 @@ class WeatherDescriptionGenerator:
 
         self.tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
+
     def _extract_info(self, sentence):
         print(sentence)
         locations = []
         weather_events = []
         for word in sentence:
+            #lematising the word
+
             if word in self.provinces:
                 locations.append(word)
                 print(word)
@@ -120,23 +128,40 @@ class WeatherDescriptionGenerator:
         return standard_locations, refined_weather_events
 
     def generate_descriptions(self, sentence):
-        sentences = self.tokenizer.tokenize(sentence)
-        descriptions_set = set()
+        #split the sentence by _ and store in a list
+        words = sentence.split("_")
+        print(words)
+        weather_event = words[0]
+        location = words[1]
 
-        for sentence in sentences:
-            if "nuwara eliya" in sentence.lower():
-                sentence = sentence.replace("Nuwara Eliya", "nuwara-eliya")
-            word_list = word_tokenize(sentence.lower())
-            locations, weather_events = self._extract_info(word_list)
-            for weather_event in weather_events:
-                for location in locations:
-                    description = f"There will be {weather_event}++ means "
-                    if weather_event in self.your_weather_descriptions:
-                        description += self.your_weather_descriptions[weather_event]
-                    description += f" In {location}+, place in Sri Lanka "
-                    if location in self.your_location_descriptions:
-                        description += self.your_location_descriptions[location] + " "
-                    description += ("realistic++, detailed, intricate, focused, extreme details, HD photography, masterpiece")
-                    descriptions_set.add((description.strip(), location, weather_event))
+        description = f"There will be {weather_event}++ means "
+        if weather_event in self.your_weather_descriptions:
+            description += self.your_weather_descriptions[weather_event]
+        description += f" In {location}+, place in Sri Lanka "
+        if location in self.your_location_descriptions:
+            description += self.your_location_descriptions[location] + " "
+        description += ("realistic++, detailed, intricate, focused, extreme details, HD photography, masterpiece")
 
-        return list(descriptions_set)
+        return (description, location, weather_event)
+
+        # def generate_descriptions(self, sentence):
+        # sentences = self.tokenizer.tokenize(sentence)
+        # descriptions_set = set()
+        #
+        # for sentence in sentences:
+        #     if "nuwara eliya" in sentence.lower():
+        #         sentence = sentence.replace("Nuwara Eliya", "nuwara-eliya")
+        #     word_list = word_tokenize(sentence.lower())
+        #     locations, weather_events = self._extract_info(word_list)
+        #     for weather_event in weather_events:
+        #         for location in locations:
+        #             description = f"There will be {weather_event}++ means "
+        #             if weather_event in self.your_weather_descriptions:
+        #                 description += self.your_weather_descriptions[weather_event]
+        #             description += f" In {location}+, place in Sri Lanka "
+        #             if location in self.your_location_descriptions:
+        #                 description += self.your_location_descriptions[location] + " "
+        #             description += ("realistic++, detailed, intricate, focused, extreme details, HD photography, masterpiece")
+        #             descriptions_set.add((description.strip(), location, weather_event))
+        #
+        # return list(descriptions_set)
