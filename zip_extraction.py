@@ -8,7 +8,7 @@ API_URL = 'http://localhost:8000/generate-images/'  # Replace with your actual A
 BASE_DIRECTORY = "generated_images"
 # Define the request body
 request_body = {
-  "sentence": "rain_jaffna"
+  "sentence": "lightrain_kalutara_day"
 }
 
 

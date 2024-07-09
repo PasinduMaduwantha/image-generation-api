@@ -73,13 +73,17 @@ class WeatherDescriptionGenerator:
             "Mannar": "Known for its thriving fishing industry, historical sites like the Mannar Fort, and the unique Adam's Bridge, a chain of limestone shoals connecting it to India. The district also features beautiful beaches and the ancient Baobab tree.",
             "Vavuniya": "A district with a blend of agriculture and urban development, known for its historical importance, cultural diversity, and landmarks such as the Vavuniya Archaeological Museum.",
             "Mullaitivu": "Known for its serene beaches, lagoons, and natural beauty, this district also holds historical significance from the civil conflict. The district features the Mullaitivu Lagoon and several war memorials."
-
-
-
         }
 
+        self.time_description = {
+            "day": "day light",
+            "night": "A dark night, very dark++ environment+"
+        }
+
+
         self.your_weather_descriptions = {
-            "rain": "rain+++ falling, rain drops, wet environment, single figure walking with an umbrella.",
+            "lightrain": "rain+++ falling, rain drops, wet environment, single figure walking with an umbrella.",
+            "heavyrain": "heavy rain+++ falling, rain drops falling, wet environment, water on the floor, single figure walking with an umbrella.",
             "shower": "rain+++ falling, rain drops, wet environment, single figure walking with an umbrella",
             "thundershower": "A thunderstorm with rain+++ falling, lightning, continuous thundering.",
             "windy": "strong winds++ blowing.",
@@ -149,10 +153,15 @@ class WeatherDescriptionGenerator:
 
     def generate_descriptions(self, sentence):
         #split the sentence by _ and store in a list
-        words = sentence.split("_")
+        try:
+            words = sentence.split("_")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
         print(words)
         weather_event = words[0]
         location = words[1]
+        time = words[2]
 
         description = f"There will be {weather_event}++ means "
         if weather_event in self.your_weather_descriptions:
@@ -160,9 +169,16 @@ class WeatherDescriptionGenerator:
         description += f" In {location}+, place in Sri Lanka "
         if location in self.your_location_descriptions:
             description += self.your_location_descriptions[location] + " "
+        if time in self.time_description[time]:
+            description+= self.time_description[time]
+
+
         description += ("realistic++, detailed, intricate, focused, extreme details, HD photography, masterpiece")
 
-        return (description, location, weather_event)
+        return (description, location, time, weather_event)
+
+    # def generate_sentence_description(self, sentence):
+
 
         # def generate_descriptions(self, sentence):
         # sentences = self.tokenizer.tokenize(sentence)
